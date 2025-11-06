@@ -23,6 +23,7 @@ project.xcworkspace
 .swiftpm/
 Packages/
 Package.resolved
+Build/
 
 # CocoaPods
 Pods/

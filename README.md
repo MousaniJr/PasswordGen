@@ -66,6 +66,94 @@ Each password consists of:
    swift run
    ```
 
+## Exporting the App
+
+To create a standalone `.app` bundle that you can run from your Applications folder:
+
+### Method 1: Using Xcode (Recommended)
+
+1. Open the project in Xcode:
+   ```bash
+   open Package.swift
+   ```
+
+2. Select **Product** → **Archive** from the menu
+
+3. When the archive finishes, the Organizer window will open
+
+4. Click **Distribute App**
+
+5. Select **Copy App** and click **Next**
+
+6. Choose a destination folder to save the app
+
+7. The `PasswordGen.app` will be exported to your chosen location
+
+8. Move it to your `/Applications` folder or anywhere you like!
+
+### Method 2: Using the Build Script
+
+Run the provided build script to automatically create a `.app` bundle:
+
+```bash
+chmod +x build_app.sh
+./build_app.sh
+```
+
+This will:
+- Build the app in release mode
+- Create a proper `.app` bundle
+- Place it in the `Build` directory
+- The app will be ready to use at `Build/PasswordGen.app`
+
+You can then copy `PasswordGen.app` to your Applications folder:
+```bash
+cp -r Build/PasswordGen.app /Applications/
+```
+
+### Method 3: Manual Build with swiftc
+
+For advanced users who want to manually build:
+
+```bash
+# Create build directory
+mkdir -p Build/PasswordGen.app/Contents/MacOS
+mkdir -p Build/PasswordGen.app/Contents/Resources
+
+# Build the executable
+swiftc -o Build/PasswordGen.app/Contents/MacOS/PasswordGen \
+  Sources/*.swift \
+  -framework SwiftUI \
+  -framework AppKit \
+  -target arm64-apple-macos13.0
+
+# Create Info.plist
+cat > Build/PasswordGen.app/Contents/Info.plist << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>PasswordGen</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.passwordgen.app</string>
+    <key>CFBundleName</key>
+    <string>PasswordGen</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+</dict>
+</plist>
+EOF
+```
+
+### Running the Exported App
+
+Once exported, simply double-click `PasswordGen.app` to launch it!
+
 ## Project Structure
 
 ```
